@@ -2,19 +2,19 @@ package com.daku.tech.prototype.v1.service.impl;
 
 import com.daku.tech.prototype.v1.dto.ReadingResponse;
 import com.daku.tech.prototype.v1.service.TriggerService;
-import org.springframework.scheduling.annotation.Scheduled;
+import lombok.extern.log4j.Log4j2;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 
+@Log4j2
 public class TriggerServiceImpl implements TriggerService {
     private static final String FILE_PATH = "../output.txt";
-    private int lat;
-    private int lng;
+    private double lat;
+    private double lng;
     private int moistureFlag;
 
-    @Scheduled(fixedRate = 1000)
     public ReadingResponse checkDeviceReadings() {
         ReadingResponse response = new ReadingResponse();
         try (BufferedReader reader = new BufferedReader(new FileReader(FILE_PATH))) {
@@ -22,10 +22,11 @@ public class TriggerServiceImpl implements TriggerService {
             if (line != null) {
                 String[] numbers = line.split(",");
                 if (numbers.length == 3) {
-                    lat = Integer.parseInt(numbers[0].trim());
-                    lng = Integer.parseInt(numbers[1].trim());
+                    lat = Double.parseDouble(numbers[0].trim());
+                    lng = Double.parseDouble(numbers[1].trim());
                     moistureFlag = Integer.parseInt(numbers[2].trim());
                 }
+                log.info("device readings for lat, lng, moisture {},{},{}",lat,lng,moistureFlag);
                 response.setLat(lat);
                 response.setLng(lng);
                 response.setMoistureFlag(moistureFlag);

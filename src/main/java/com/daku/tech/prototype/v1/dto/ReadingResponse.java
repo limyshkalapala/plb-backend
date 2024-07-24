@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class ReadingResponse {
-    int lat;
-    int lng;
+    double lat;
+    double lng;
     int moistureFlag;
 }
